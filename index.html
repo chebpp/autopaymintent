@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UPI Mandate Payment</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 20px;
+      text-align: center;
+    }
+    input, button {
+      padding: 10px;
+      margin: 10px;
+      width: 80%;
+      font-size: 16px;
+    }
+    .app-icons {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 20px;
+    }
+    .app-icons img {
+      width: 60px;
+      height: 60px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h2>Enter Mandate Intent URL</h2>
+  <input id="intentUrl" placeholder="upi://mandate?..."/>
+  <br/>
+  <button onclick="showApps()">Pay</button>
+
+  <div class="app-icons" id="appIcons" style="display: none;"></div>
+
+  <script>
+    const apps = [
+      {
+        name: "PhonePe",
+        package: "com.phonepe.app",
+        icon: "https://upload.wikimedia.org/wikipedia/commons/f/f0/PhonePe_Logo.png"
+      },
+      {
+        name: "Google Pay",
+        package: "com.google.android.apps.nbu.paisa.user",
+        icon: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Google_Pay_Logo.svg/512px-Google_Pay_Logo.svg.png"
+      },
+      {
+        name: "Paytm",
+        package: "net.one97.paytm",
+        icon: "https://upload.wikimedia.org/wikipedia/commons/5/55/Paytm_logo.png"
+      }
+    ];
+
+    function showApps() {
+      const url = document.getElementById("intentUrl").value.trim();
+      if (!url.startsWith("upi://mandate")) {
+        alert("Please enter a valid mandate intent URL");
+        return;
+      }
+
+      const container = document.getElementById("appIcons");
+      container.innerHTML = "";
+
+      apps.forEach(app => {
+        // Fallback: try to open the app — if not installed, browser shows fallback behavior
+        const img = document.createElement("img");
+        img.src = app.icon;
+        img.alt = app.name;
+        img.title = app.name;
+
+        img.onclick = () => {
+          const intent = `${url}&pn=${app.package}`;
+          window.location.href = intent;
+        };
+
+        container.appendChild(img);
+      });
+
+      container.style.display = "flex";
+    }
+  </script>
+</body>
+</html>
